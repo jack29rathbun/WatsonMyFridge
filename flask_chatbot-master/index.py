@@ -1,4 +1,6 @@
 from flask import Flask, request, jsonify, render_template
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+from ibm_watson import DiscoveryV1
 import os
 import requests
 import json
@@ -29,9 +31,9 @@ class DiscoveryContainer:
           queryString += ",ingredients:" + ingredients[i]
       return self.discovery.query(environment_id='a68f0894-50a5-4e91-9f4d-11780877141d', collection_id='eacea543-c7f3-45a1-98fa-9fe86c4b34f6',query=queryString).get_result()
 
-      def getTitlesFromIngredients(self, ingredients):
+    def getTitlesFromIngredients(self, ingredients):
           titles = []
-          for result in self.getRecipesFromIngredients(self.discovery, ingredients)["results"]:
+          for result in self.getRecipesFromIngredients(ingredients)["results"]:
             titles.append(result["title"])
           return titles
 
@@ -45,7 +47,10 @@ def index():
 
 @app.route('/send_message', methods=['POST'])
 def send_message():
-    return {"message": request.form["message"]}
+    disc = DiscoveryContainer()
+    ingredients = request.form["message"].split(",")
+    titles = str(disc.getTitlesFromIngredients(ingredients))
+    return {"message": titles}
 
 # run Flask app
 if __name__ == "__main__":

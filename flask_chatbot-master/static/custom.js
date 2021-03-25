@@ -1,8 +1,10 @@
+var ingredients = [];
 $(function() {
     function submit_message(message) {
-
+        ingredients.push(message);
+        ingredientString = ingredients.toString()
         $.post( "/send_message", {
-            message: message
+            message: ingredientString
         }, handle_response);
 
         function handle_response(data) {
