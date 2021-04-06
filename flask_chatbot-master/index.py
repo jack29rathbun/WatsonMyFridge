@@ -31,6 +31,9 @@ class DiscoveryContainer:
           queryString += ",ingredients:" + ingredients[i]
       return self.discovery.query(environment_id='a68f0894-50a5-4e91-9f4d-11780877141d', collection_id='eacea543-c7f3-45a1-98fa-9fe86c4b34f6',query=queryString).get_result()
 
+    def getNumberFromIngredients(self, ingredients):
+        return self.getRecipesFromIngredients(ingredients)["matching_results"]
+
     def getTitlesFromIngredients(self, ingredients):
           titles = []
           for result in self.getRecipesFromIngredients(ingredients)["results"]:
@@ -44,6 +47,13 @@ class DiscoveryContainer:
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/get_number', methods=['POST'])
+def get_number():
+    disc = DiscoveryContainer()
+    ingredients = request.form["message"].split(",")
+    msg = str(disc.getNumberFromIngredients(ingredients))
+    return {"message": msg}
 
 @app.route('/send_message', methods=['POST'])
 def send_message():
