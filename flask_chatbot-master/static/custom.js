@@ -9,7 +9,13 @@ $(function() {
                   ${"will attempt to remove " + ingredient}
               </div>
           `)
-        }else
+        }else if(message.toLowerCase() == "show")
+        {
+          $.post( "/get_titles", {
+              message: ingredientString
+          }, handle_show_response);
+        }
+        else
         {
           ingredients.push(message);
           ingredientString = ingredients.toString()
@@ -17,6 +23,17 @@ $(function() {
               message: ingredientString
           }, handle_number_response);
         }
+        function handle_show_response(data)
+        {
+          $('.chat-container').append(`
+              <div class="chat-message col-md-5 offset-md-7 bot-message">
+                  ${data.message}
+              </div>
+          `)
+          // remove the loading indicator
+          $( "#loading" ).remove();
+        }
+
         function handle_number_response(data) {
             var response_string = "There are " + data.message + " recipes that include " + ingredients.toString().replace(/,/g, ", ") + ". Type \"show\" if you would like to see "
             if(data.message > 10)

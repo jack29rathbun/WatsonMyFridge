@@ -55,12 +55,12 @@ def get_number():
     msg = str(disc.getNumberFromIngredients(ingredients))
     return {"message": msg}
 
-@app.route('/send_message', methods=['POST'])
-def send_message():
+@app.route('/get_titles', methods=['POST'])
+def get_titles():
     disc = DiscoveryContainer()
     ingredients = request.form["message"].split(",")
-    titles = str(disc.getTitlesFromIngredients(ingredients))
-    return {"message": titles}
+    msg = str(disc.getTitlesFromIngredients(ingredients))
+    return {"message": msg}
 
 # run Flask app
 if __name__ == "__main__":
