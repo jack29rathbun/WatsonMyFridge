@@ -59,7 +59,11 @@ def get_number():
 def get_titles():
     disc = DiscoveryContainer()
     ingredients = request.form["message"].split(",")
-    msg = str(disc.getTitlesFromIngredients(ingredients))
+    titles = disc.getTitlesFromIngredients(ingredients)
+    msg = "<ol>"
+    for recipe in titles:
+        msg += f'<li>{recipe}</li>'
+    msg += '</ol>'
     return {"message": msg}
 
 # run Flask app
