@@ -70,8 +70,10 @@ def get_titles():
 def get_full():
     disc = DiscoveryContainer()
     ingredients = request.form["message"].split(",")
-    index = int(ingredients.pop(-1))
+    index = int(ingredients.pop(-1)) - 1
     titles = disc.getTitlesFromIngredients(ingredients)
+    if len(titles) < index + 1:
+        return {"message": "Please enter a valid number."}
     recipe = disc.getFullRecipeFromTitle(titles[index])
     recipe.ingredients.pop(-1)
     msg = recipe.title

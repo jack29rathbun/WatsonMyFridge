@@ -3,7 +3,7 @@ $(function() {
     function submit_message(message) {
         if(message.toLowerCase().startsWith("remove"))
         {
-          ingredient = message.toLowerCase().split(/ (.+)/)[1]
+          ingredient = message.split(/ (.+)/)[1]
           index = ingredients.indexOf(ingredient)
           if(index == -1)
           {
@@ -11,9 +11,12 @@ $(function() {
           }
           else
           {
-              ingredients.splice(index)
+              ingredients.splice(index, 1)
               ingredientString = ingredients.toString()
               msg = "Removed " + ingredient + "."
+              $.post( "/get_number", {
+                  message: ingredientString
+              }, handle_number_response);
           }
           $('.chat-container').append(`
               <div class="chat-message col-md-5 offset-md-7 bot-message">
