@@ -41,7 +41,7 @@ class DiscoveryContainer:
           return titles
 
     def getFullRecipeFromTitle(self, title):
-        return Recipe(self.query(environment_id='a68f0894-50a5-4e91-9f4d-11780877141d', collection_id='eacea543-c7f3-45a1-98fa-9fe86c4b34f6',query="title::" + title).get_result())
+        return Recipe(self.discovery.query(environment_id='a68f0894-50a5-4e91-9f4d-11780877141d', collection_id='eacea543-c7f3-45a1-98fa-9fe86c4b34f6',query="title::" + title).get_result())
 
 
 @app.route('/')
@@ -65,6 +65,25 @@ def get_titles():
         msg += f'<li>{recipe}</li>'
     msg += '</ol>'
     return {"message": msg}
+
+@app.route('/get_full', methods=['POST'])
+def get_full():
+    disc = DiscoveryContainer()
+    ingredients = request.form["message"].split(",")
+    index = int(ingredients.pop(-1))
+    titles = disc.getTitlesFromIngredients(ingredients)
+    recipe = disc.getFullRecipeFromTitle(titles[index])
+    recipe.ingredients.pop(-1)
+    msg = recipe.title
+    msg += "<br>Ingredients:"
+    msg += "<ol>"
+    for ingredient in recipe.ingredients:
+        msg += f'<li>{ingredient}</li>'
+    msg += "</ol>"
+    msg += "Instructions:<br> "
+    msg += recipe.instructions
+    return {"message": msg}
+
 
 # run Flask app
 if __name__ == "__main__":

@@ -7,13 +7,38 @@ $(function() {
           $('.chat-container').append(`
               <div class="chat-message col-md-5 offset-md-7 bot-message">
                   ${"will attempt to remove " + ingredient}
-              </div>
+              </div
           `)
+          // remove the loading indicator
+          $( "#loading" ).remove();
         }else if(message.toLowerCase() == "show")
         {
           $.post( "/get_titles", {
               message: ingredientString
           }, handle_show_response);
+        }
+        else if(!isNaN(message))
+        {
+          if(message < 1)
+          {
+            $('.chat-container').append(`
+                <div class="chat-message col-md-5 offset-md-7 bot-message">
+                    ${"Please enter a valid number."}
+                </div
+            `)
+            // remove the loading indicator
+            $( "#loading" ).remove();
+          }
+          else
+          {
+            ingredients.push(message);
+            ingredientString = ingredients.toString()
+            $.post( "/get_full", {
+                message: ingredientString
+            }, handle_full_response);
+          }
+          ingredients.pop()
+          ingredientString = ingredients.toString()
         }
         else
         {
@@ -24,6 +49,17 @@ $(function() {
           }, handle_number_response);
         }
         function handle_show_response(data)
+        {
+          $('.chat-container').append(`
+              <div class="chat-message col-md-5 offset-md-7 bot-message">
+                  ${data.message}
+              </div>
+          `)
+          // remove the loading indicator
+          $( "#loading" ).remove();
+        }
+
+        function handle_full_response(data)
         {
           $('.chat-container').append(`
               <div class="chat-message col-md-5 offset-md-7 bot-message">
