@@ -4,9 +4,20 @@ $(function() {
         if(message.toLowerCase().startsWith("remove"))
         {
           ingredient = message.toLowerCase().split(/ (.+)/)[1]
+          index = ingredients.indexOf(ingredient)
+          if(index == -1)
+          {
+            msg = "Couldn't find " + ingredient + ". Please type the ingredient exactly."
+          }
+          else
+          {
+              ingredients.splice(index)
+              ingredientString = ingredients.toString()
+              msg = "Removed " + ingredient + "."
+          }
           $('.chat-container').append(`
               <div class="chat-message col-md-5 offset-md-7 bot-message">
-                  ${"will attempt to remove " + ingredient}
+                  ${msg}
               </div
           `)
           // remove the loading indicator
