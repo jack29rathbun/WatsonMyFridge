@@ -64,6 +64,7 @@ def get_titles():
     for recipe in titles:
         msg += f'<li>{recipe}</li>'
     msg += '</ol>'
+    msg += 'Enter a recipe number to see the full recipe.'
     return {"message": msg}
 
 @app.route('/get_full', methods=['POST'])
